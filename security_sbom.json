@@ -1,0 +1,103 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "metadata": {
+    "component": {
+      "name": "Elara Grand Hotel & Resort Management Platform",
+      "version": "1.0.0",
+      "type": "application"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "asgiref",
+      "version": "3.12.1",
+      "purl": "pkg:pypi/asgiref@3.12.1"
+    },
+    {
+      "type": "library",
+      "name": "Django",
+      "version": "4.2.30",
+      "purl": "pkg:pypi/Django@4.2.30"
+    },
+    {
+      "type": "library",
+      "name": "djangorestframework",
+      "version": "3.17.2",
+      "purl": "pkg:pypi/djangorestframework@3.17.2"
+    },
+    {
+      "type": "library",
+      "name": "djangorestframework_simplejwt",
+      "version": "5.5.1",
+      "purl": "pkg:pypi/djangorestframework_simplejwt@5.5.1"
+    },
+    {
+      "type": "library",
+      "name": "django-axes",
+      "version": "8.3.1",
+      "purl": "pkg:pypi/django-axes@8.3.1"
+    },
+    {
+      "type": "library",
+      "name": "django-cors-headers",
+      "version": "4.9.0",
+      "purl": "pkg:pypi/django-cors-headers@4.9.0"
+    },
+    {
+      "type": "library",
+      "name": "django-csp",
+      "version": "4.0",
+      "purl": "pkg:pypi/django-csp@4.0"
+    },
+    {
+      "type": "library",
+      "name": "mysqlclient",
+      "version": "2.3.0",
+      "purl": "pkg:pypi/mysqlclient@2.3.0"
+    },
+    {
+      "type": "library",
+      "name": "packaging",
+      "version": "26.3",
+      "purl": "pkg:pypi/packaging@26.3"
+    },
+    {
+      "type": "library",
+      "name": "pillow",
+      "version": "12.3.0",
+      "purl": "pkg:pypi/pillow@12.3.0"
+    },
+    {
+      "type": "library",
+      "name": "pip",
+      "version": "26.2.1",
+      "purl": "pkg:pypi/pip@26.2.1"
+    },
+    {
+      "type": "library",
+      "name": "PyJWT",
+      "version": "2.15.1",
+      "purl": "pkg:pypi/PyJWT@2.15.1"
+    },
+    {
+      "type": "library",
+      "name": "python-dotenv",
+      "version": "1.2.4",
+      "purl": "pkg:pypi/python-dotenv@1.2.4"
+    },
+    {
+      "type": "library",
+      "name": "sqlparse",
+      "version": "0.6.0",
+      "purl": "pkg:pypi/sqlparse@0.6.0"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "version": "2026.5",
+      "purl": "pkg:pypi/tzdata@2026.5"
+    }
+  ]
+}

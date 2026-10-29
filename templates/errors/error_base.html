@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ error_code|default:"Access Restricted" }} | Elara Grand Resort</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'elara-gold': '#D4AF37',
+                        'elara-orange': '#C86D3B',
+                        'elara-dark': '#0F1115',
+                        'elara-card': '#161920',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-elara-dark text-slate-300 min-h-screen flex items-center justify-center p-6 font-sans">
+    <div class="max-w-md w-full bg-elara-card border border-slate-800 rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-elara-orange via-elara-gold to-elara-orange"></div>
+        
+        <div class="w-16 h-16 mx-auto mb-6 rounded-full bg-amber-500/10 flex items-center justify-center text-elara-gold text-2xl border border-elara-gold/20">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <h1 class="text-3xl font-serif text-white mb-2 tracking-wide">{{ error_title|default:"Access Restricted" }}</h1>
+        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+            {{ error_message|default:"This section of our luxury platform is reserved or temporarily unavailable. Our system has safely protected this request." }}
+        </p>
+
+        {% if correlation_id %}
+        <div class="bg-black/40 border border-slate-800 rounded-lg p-3 mb-6 text-xs text-left">
+            <span class="text-slate-500 uppercase tracking-widest block font-medium mb-1">Security Incident Reference</span>
+            <code class="text-elara-gold font-mono">{{ correlation_id }}</code>
+        </div>
+        {% endif %}
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/" class="px-6 py-3 rounded-lg bg-gradient-to-r from-elara-orange to-elara-gold text-white font-medium text-xs tracking-wider uppercase hover:opacity-90 transition-opacity">
+                Return to Sanctuary
+            </a>
+            <a href="/guest-dashboard/" class="px-6 py-3 rounded-lg bg-slate-800 text-slate-300 hover:text-white font-medium text-xs tracking-wider uppercase transition-colors">
+                Guest Portal
+            </a>
+        </div>
+        
+        <p class="text-[11px] text-slate-600 mt-8">
+            Elara Grand Hotel & Resort • Zero-Trust Security Enforced
+        </p>
+    </div>
+</body>
+</html>

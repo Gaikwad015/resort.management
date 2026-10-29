@@ -1,0 +1,19 @@
+# ==============================================================================
+# ELARA GRAND HOTEL & RESORT — EXACT FROZEN DEPENDENCIES (requirements-lock.txt)
+# Generated from verified running environment on 2026-10-29
+# ==============================================================================
+
+asgiref==3.12.1
+Django==4.2.30
+django-axes==8.3.1
+django-cors-headers==4.9.0
+django-csp==4.0
+djangorestframework==3.17.2
+djangorestframework-simplejwt==5.5.1
+mysqlclient==2.3.0
+packaging==26.3
+pillow==12.3.0
+PyJWT==2.15.1
+python-dotenv==1.2.4
+sqlparse==0.6.0
+tzdata==2026.5

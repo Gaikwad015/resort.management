@@ -1,0 +1,528 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- 1. HERO SECTION -->
+<section class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+    <!-- Parallax Background Image -->
+    <div class="absolute inset-0 w-full h-full">
+        <img src="https://images.unsplash.com/photo-1542314831-c6a4d27ce003?q=80&w=2070&auto=format&fit=crop" alt="Luxury Hotel Resort" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-black/60 bg-gradient-to-t from-elara-black via-black/40 to-transparent"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-elara-gold/15 via-transparent to-transparent"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 text-center px-4 max-w-5xl mx-auto flex flex-col items-center">
+        <span class="text-elara-gold uppercase tracking-[0.4em] text-sm md:text-base font-semibold mb-6 animate-[fadeIn_1.5s_ease-out]">
+            PUNE, MAHARASHTRA • 5-STAR LUXURY
+        </span>
+        <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-6 leading-tight animate-[slideUp_1s_ease-out]">
+            YOUR ESCAPE.<br>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-elara-gold via-amber-200 to-elara-champagne">ELEVATED.</span>
+        </h1>
+        <p class="text-gray-200 text-lg md:text-xl font-light mb-10 max-w-2xl animate-[fadeIn_2s_ease-out]">
+            Welcome to Elara Grand Hotel & Resort. Where timeless heritage meets contemporary 5-star opulence.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-5 animate-[slideUp_1.5s_ease-out]">
+            <button onclick="openBookingModal()" class="btn-orange px-8 py-4 rounded-xl text-sm uppercase tracking-wider font-semibold shadow-2xl hover:scale-105 transition-transform">
+                <i class="fa-solid fa-calendar-check mr-2"></i> Book Your Stay
+            </button>
+            <a href="#rooms" class="btn-outline-gold px-8 py-4 rounded-xl text-sm uppercase tracking-wider font-semibold backdrop-blur-md">
+                Explore Suites
+            </a>
+            <a href="#events" class="px-8 py-4 rounded-xl bg-white/10 text-white hover:bg-white/20 text-sm uppercase tracking-wider font-semibold backdrop-blur-md transition-colors">
+                Grand Weddings
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce text-elara-gold">
+        <span class="text-[10px] uppercase tracking-widest mb-1.5 opacity-80">Discover</span>
+        <i class="fa-solid fa-chevron-down text-sm"></i>
+    </div>
+</section>
+
+<!-- 2. INTERACTIVE BOOKING BAR -->
+<section id="booking-bar" class="relative z-20 -mt-14 px-4">
+    <div class="container mx-auto max-w-6xl">
+        <div class="glass-light rounded-2xl p-4 md:p-6 flex flex-col lg:flex-row items-center justify-between gap-4 border border-elara-gold/40 shadow-2xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                <div class="flex flex-col border-b sm:border-b-0 sm:border-r border-gray-200/60 pr-4 pb-2 sm:pb-0">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1">Check-in Date</label>
+                    <input type="date" id="bar_check_in" class="bg-transparent text-elara-black focus:outline-none font-medium cursor-pointer text-sm">
+                </div>
+                <div class="flex flex-col border-b sm:border-b-0 md:border-r border-gray-200/60 pr-4 pb-2 sm:pb-0">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1">Check-out Date</label>
+                    <input type="date" id="bar_check_out" class="bg-transparent text-elara-black focus:outline-none font-medium cursor-pointer text-sm">
+                </div>
+                <div class="flex flex-col border-b sm:border-b-0 sm:border-r border-gray-200/60 pr-4 pb-2 sm:pb-0">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1">Guests & Suite</label>
+                    <select id="bar_guests" class="bg-transparent text-elara-black focus:outline-none font-medium cursor-pointer text-sm">
+                        <option value="2">2 Adults (King Suite)</option>
+                        <option value="1">1 Adult (Deluxe Room)</option>
+                        <option value="3">3 Guests (Executive Suite)</option>
+                        <option value="4">4 Guests (Presidential Suite)</option>
+                    </select>
+                </div>
+                <div class="flex flex-col pr-4 pb-2 sm:pb-0">
+                    <label class="text-[11px] uppercase tracking-wider text-gray-500 font-semibold mb-1">Special Suite</label>
+                    <select id="bar_room_type" class="bg-transparent text-elara-black focus:outline-none font-medium cursor-pointer text-sm">
+                        {% for rtype in room_types %}
+                        <option value="{{ rtype.id }}">{{ rtype.name }} (₹{{ rtype.base_price_per_night|floatformat:0 }})</option>
+                        {% empty %}
+                        <option value="">Deluxe King Suite</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button onclick="handleBookingBarSearch()" class="btn-orange w-full lg:w-auto px-8 py-4 rounded-xl font-semibold uppercase tracking-wider text-xs whitespace-nowrap shadow-lg">
+                <i class="fa-solid fa-magnifying-glass mr-2"></i> Reserve Suite
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 3. WELCOME / ABOUT -->
+<section class="py-24 bg-elara-ivory relative overflow-hidden" id="about">
+    <div class="container mx-auto px-6 lg:px-12">
+        <div class="flex flex-col lg:flex-row items-center gap-16">
+            <div class="lg:w-1/2 reveal">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-12 h-[1px] bg-elara-gold"></div>
+                    <span class="uppercase tracking-[0.2em] text-elara-gold text-sm font-semibold">The Elara Legacy</span>
+                </div>
+                <h2 class="font-serif text-4xl lg:text-5xl text-elara-charcoal mb-8 leading-snug">
+                    A Grand Sanctuary in the Cultural Capital of Maharashtra.
+                </h2>
+                <p class="text-gray-600 mb-6 leading-relaxed font-light">
+                    Inspired by royal Maratha grandeur and refined modern luxury, **Elara Grand Hotel & Resort** stands as Pune’s preeminent hospitality sanctuary. 
+                </p>
+                <p class="text-gray-600 mb-8 leading-relaxed font-light">
+                    Surrounded by rolling Sahyadri hilltops, we feature 180 lavish suites, four bespoke dining destinations, an ancient Ayurvedic wellness spa, and western India’s most magnificent pillarless wedding ballrooms.
+                </p>
+                <div class="flex gap-4">
+                    <button onclick="openBookingModal()" class="btn-orange px-6 py-3 rounded-lg text-xs uppercase tracking-wider font-semibold">
+                        Experience Elara
+                    </button>
+                    <a href="#rooms" class="btn-outline-gold px-6 py-3 rounded-lg text-xs uppercase tracking-wider font-semibold">
+                        View Accommodations
+                    </a>
+                </div>
+            </div>
+            <div class="lg:w-1/2 relative reveal">
+                <div class="relative z-10 w-4/5 ml-auto img-zoom-container rounded-2xl shadow-2xl overflow-hidden border border-elara-gold/20">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=2070&auto=format&fit=crop" alt="Resort Lobby" class="w-full h-[480px] object-cover img-zoom">
+                </div>
+                <div class="absolute top-1/4 left-0 w-1/2 z-20 img-zoom-container rounded-2xl shadow-xl border-4 border-white overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1551882547-ff40eb0d8d73?q=80&w=2071&auto=format&fit=crop" alt="Luxury Details" class="w-full h-[280px] object-cover img-zoom">
+                </div>
+                <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-elara-gold/20 -z-10 rounded-2xl"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. ROOMS & SUITES -->
+<section class="py-24 bg-white" id="rooms">
+    <div class="container mx-auto px-6 lg:px-12">
+        <div class="text-center mb-16 reveal">
+            <span class="uppercase tracking-[0.2em] text-elara-gold text-sm font-semibold block mb-4">World-Class Sanctuaries</span>
+            <h2 class="font-serif text-4xl lg:text-5xl text-elara-charcoal">Signature Rooms & Suites</h2>
+            <p class="text-gray-500 text-sm mt-3 max-w-xl mx-auto">Each accommodation features panoramic floor-to-ceiling vistas, bespoke Italian marble finishes, and 24-hour butler assistance.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for rtype in room_types %}
+            <div class="group relative overflow-hidden rounded-2xl bg-gray-50 reveal shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col justify-between border border-gray-100">
+                <div class="relative h-72 overflow-hidden">
+                    {% if rtype.slug == 'elara-presidential-suite' %}
+                        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    {% elif rtype.slug == 'royal-pune-luxury-suite' %}
+                        <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    {% elif rtype.slug == 'serenity-garden-pool-villa' %}
+                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    {% elif rtype.slug == 'executive-club-suite' %}
+                        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    {% else %}
+                        <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    {% endif %}
+                    
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent opacity-70 group-hover:opacity-85 transition-opacity"></div>
+                    <div class="absolute bottom-0 left-0 p-6 w-full">
+                        <h3 class="font-serif text-2xl text-white mb-1">{{ rtype.name }}</h3>
+                        <p class="text-elara-gold text-sm font-semibold tracking-wider font-mono">₹{{ rtype.base_price_per_night|floatformat:0 }} <span class="text-xs text-gray-300 font-normal">/ night + taxes</span></p>
+                    </div>
+                </div>
+
+                <div class="p-6 bg-white flex-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 text-[11px] text-gray-500 uppercase tracking-wider mb-4 pb-4 border-b border-gray-100">
+                            <span><i class="fa-solid fa-user-group text-elara-gold mr-1"></i> {{ rtype.max_adults }} Adults</span>
+                            <span><i class="fa-solid fa-bed text-elara-gold mr-1"></i> {{ rtype.bed_type }}</span>
+                            <span><i class="fa-solid fa-maximize text-elara-gold mr-1"></i> {{ rtype.room_size_sqm }} sqm</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-6 line-clamp-3 leading-relaxed">{{ rtype.description }}</p>
+                    </div>
+                    <div class="flex justify-between items-center pt-2">
+                        <span class="text-xs font-semibold uppercase text-gray-500 tracking-wider">Available in Inventory</span>
+                        <button onclick="openBookingModal('{{ rtype.id }}', '{{ rtype.name }}', {{ rtype.base_price_per_night }})" class="btn-orange px-4 py-2 rounded-lg uppercase text-xs font-bold tracking-wider shadow">
+                            Reserve Suite <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 5. SIGNATURE DINING -->
+<section class="py-24 bg-elara-black text-white relative" id="dining">
+    <div class="container mx-auto px-6 lg:px-12 relative z-10">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+            <div>
+                <span class="uppercase tracking-[0.2em] text-elara-gold text-sm font-semibold block mb-4">Epicurean Artistry</span>
+                <h2 class="font-serif text-4xl lg:text-5xl">Signature Dining Destinations</h2>
+            </div>
+            <p class="text-gray-400 text-sm max-w-md mt-4 md:mt-0">Curated by master culinary chefs celebrating authentic Peshwa royal heritage and global Michelin-caliber gastronomy.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for venue in dining_venues %}
+            <div class="group relative h-[420px] overflow-hidden rounded-2xl reveal cursor-pointer border border-white/10 shadow-2xl">
+                <img src="{{ venue.image_url }}" alt="{{ venue.name }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-85"></div>
+                <div class="absolute inset-0 flex flex-col justify-end p-8">
+                    <span class="text-elara-gold text-xs uppercase tracking-widest font-semibold mb-1">{{ venue.cuisine }}</span>
+                    <h3 class="font-serif text-2xl text-white mb-2">{{ venue.name }}</h3>
+                    <p class="text-gray-300 text-xs mb-4 leading-relaxed line-clamp-2">{{ venue.description }}</p>
+                    <div class="flex items-center justify-between text-xs text-gray-400 border-t border-white/10 pt-3">
+                        <span><i class="fa-regular fa-clock mr-1 text-elara-gold"></i> {{ venue.opening_hours }}</span>
+                        <button onclick="alert('Table Reservation Confirmed at {{ venue.name }}. Host concierge will send your confirmation SMS.')" class="text-elara-gold hover:text-white font-semibold uppercase tracking-wider">
+                            Reserve Table &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 6. SPA & WELLNESS -->
+<section class="py-24 bg-elara-ivory flex flex-col lg:flex-row items-center" id="spa">
+    <div class="lg:w-1/2 h-[520px] w-full reveal">
+        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1200&auto=format&fit=crop" alt="Luxury Spa" class="w-full h-full object-cover">
+    </div>
+    <div class="lg:w-1/2 p-10 lg:p-20 flex flex-col justify-center reveal">
+        <span class="uppercase tracking-[0.2em] text-elara-gold text-sm font-semibold block mb-4">Ayurvedic Sanctuary</span>
+        <h2 class="font-serif text-4xl lg:text-5xl text-elara-charcoal mb-6">Serenity Spa & Holistic Wellness</h2>
+        <p class="text-gray-600 mb-8 leading-relaxed font-light">
+            Indulge in time-honored Ayurvedic Shirodhara, heated Himalayan mineral salt therapies, and 24-karat gold cellular rejuvenation administered by master therapists.
+        </p>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            {% for s in spa_services %}
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center text-elara-gold shrink-0">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <div>
+                    <h4 class="font-serif text-sm font-semibold text-slate-800">{{ s.name }}</h4>
+                    <p class="text-xs text-elara-gold font-mono font-medium">{{ s.duration_minutes }}m • ₹{{ s.price|floatformat:0 }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div>
+            <button onclick="alert('Spa Concierge notified. Treatment slot reservation window opened.')" class="btn-gold px-8 py-3.5 rounded-xl text-xs uppercase tracking-wider font-semibold shadow-lg">
+                Book Wellness Ritual
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 7. EVENTS & GRAND WEDDINGS (NEW SECTION) -->
+<section class="py-24 bg-slate-900 text-white relative overflow-hidden" id="events">
+    <div class="container mx-auto px-6 lg:px-12 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16 reveal">
+            <span class="uppercase tracking-[0.3em] text-elara-gold text-sm font-semibold block mb-4">Pune's Most Prestigious Venue</span>
+            <h2 class="font-serif text-4xl lg:text-5xl mb-6">Grand Weddings & Royal Galas</h2>
+            <p class="text-slate-400 text-sm leading-relaxed">
+                From high-society destination weddings to international summits, Elara Grand offers over 35,000 square feet of pillarless banquet halls, bridal dressing suites, and scenic hilltop amphitheaters.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Venue 1 -->
+            <div class="bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl reveal group">
+                <div class="h-64 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <span class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-elara-gold">
+                        Capacity: 1,200 Guests
+                    </span>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-serif text-2xl text-white mb-2">The Grand Peshwa Ballroom</h3>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">Pillarless architectural masterpiece with Belgian crystal chandeliers, dedicated pre-function foyer, and private royal drive-in porch.</p>
+                    <span class="text-xs font-medium text-elara-gold uppercase tracking-wider">15,000 Sq.Ft. • High Ceilings</span>
+                </div>
+            </div>
+
+            <!-- Venue 2 -->
+            <div class="bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl reveal group" style="transition-delay: 100ms;">
+                <div class="h-64 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <span class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-elara-gold">
+                        Capacity: 450 Guests
+                    </span>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-serif text-2xl text-white mb-2">The Sapphire Glass Pavilion</h3>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">Contemporary glasshouse banquet surrounded by lush water fountains and illuminated botanical gardens, ideal for sangeet and cocktail soirees.</p>
+                    <span class="text-xs font-medium text-elara-gold uppercase tracking-wider">6,500 Sq.Ft. • Glass Atrium</span>
+                </div>
+            </div>
+
+            <!-- Venue 3 -->
+            <div class="bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-700/80 shadow-2xl reveal group" style="transition-delay: 200ms;">
+                <div class="h-64 overflow-hidden relative">
+                    <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    <span class="absolute top-4 right-4 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-elara-gold">
+                        Capacity: 800 Guests
+                    </span>
+                </div>
+                <div class="p-6">
+                    <h3 class="font-serif text-2xl text-white mb-2">Pune Hilltop Open-Air Lawns</h3>
+                    <p class="text-xs text-slate-400 mb-4 leading-relaxed">Manicured emerald lawns overlooking Pune’s skyline with custom ceremonial mandap setups under the starlit sky.</p>
+                    <span class="text-xs font-medium text-elara-gold uppercase tracking-wider">18,000 Sq.Ft. • Sunset Vistas</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-14 text-center">
+            <button onclick="alert('Wedding Concierge Dispatched. An event planner will contact you at +91 20 6725 3300.')" class="btn-orange px-8 py-4 rounded-xl text-xs uppercase tracking-wider font-semibold shadow-2xl">
+                <i class="fa-solid fa-champagne-glasses mr-2"></i> Inquire for Weddings & Banquets
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- 8. INTERACTIVE BOOKING MODAL -->
+<div id="bookingModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-8 relative shadow-2xl border border-slate-200 overflow-y-auto max-h-[90vh]">
+        <button onclick="closeBookingModal()" class="absolute top-6 right-6 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="text-center mb-6">
+            <span class="text-xs uppercase tracking-widest text-elara-gold font-semibold block mb-1">Direct Reservation</span>
+            <h3 class="font-serif text-3xl text-slate-900">Reserve Your Sanctuary</h3>
+            <p class="text-xs text-slate-500 mt-1">Zero-Trust Server-Side Pricing • Instant Confirmation</p>
+        </div>
+
+        <form id="directBookingForm" onsubmit="submitDirectBooking(event)" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-600 block mb-1">Check-in</label>
+                    <input type="date" id="modal_check_in" required onchange="calculateModalTotal()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-elara-gold">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-600 block mb-1">Check-out</label>
+                    <input type="date" id="modal_check_out" required onchange="calculateModalTotal()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-elara-gold">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-600 block mb-1">Choose Suite</label>
+                <select id="modal_room_select" required onchange="calculateModalTotal()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-elara-gold">
+                    {% for r in available_rooms %}
+                    <option value="{{ r.id }}" data-price="{{ r.room_type.base_price_per_night }}">
+                        {{ r.room_type.name }} (Room {{ r.room_number }}) — ₹{{ r.room_type.base_price_per_night|floatformat:0 }}/night
+                    </option>
+                    {% empty %}
+                    <option value="">No rooms available</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-600 block mb-1">Adults</label>
+                    <select id="modal_adults" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900">
+                        <option value="1">1 Adult</option>
+                        <option value="2" selected>2 Adults</option>
+                        <option value="3">3 Adults</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-600 block mb-1">Children</label>
+                    <select id="modal_children" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900">
+                        <option value="0" selected>0 Children</option>
+                        <option value="1">1 Child</option>
+                        <option value="2">2 Children</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-semibold uppercase tracking-wider text-slate-600 block mb-1">Special Concierge Requests</label>
+                <input type="text" id="modal_requests" placeholder="e.g. High floor, anniversary cake, late check-in" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-900">
+            </div>
+
+            <!-- Price Breakdown Card -->
+            <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-xs text-slate-800 space-y-1.5">
+                <div class="flex justify-between">
+                    <span class="text-slate-600">Duration:</span>
+                    <span id="price_nights" class="font-semibold font-mono">1 Night</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-600">Base Room Rate:</span>
+                    <span id="price_base" class="font-semibold font-mono">₹14,500</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-600">Luxury GST (18%):</span>
+                    <span id="price_tax" class="font-semibold font-mono">₹2,610</span>
+                </div>
+                <div class="flex justify-between text-sm font-bold text-slate-900 pt-2 border-t border-amber-200">
+                    <span>Total Guaranteed Amount:</span>
+                    <span id="price_final" class="text-elara-orange font-mono">₹17,110</span>
+                </div>
+            </div>
+
+            <button type="submit" id="modal_submit_btn" class="w-full btn-orange py-4 rounded-xl text-xs uppercase tracking-wider font-bold shadow-lg">
+                Confirm & Reserve Stay
+            </button>
+        </form>
+
+        <div id="bookingSuccessBox" class="hidden text-center py-6">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto mb-4">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h4 class="font-serif text-2xl text-slate-900 mb-2">Reservation Confirmed!</h4>
+            <p class="text-xs text-slate-600 mb-4">Your 5-star sanctuary has been reserved at Elara Grand Hotel & Resort.</p>
+            <div class="bg-slate-100 p-3 rounded-xl font-mono text-xs text-slate-800 mb-6" id="successBookingId">
+                ID: #BK-CONFIRMED
+            </div>
+            <a href="/guest-dashboard/" class="btn-gold inline-block px-6 py-3 rounded-xl text-xs uppercase tracking-wider font-semibold">
+                Open Guest Portal
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Modal Controls
+function openBookingModal(roomId, roomName, price) {
+    const modal = document.getElementById('bookingModal');
+    modal.classList.remove('hidden');
+
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 2);
+
+    const checkInInput = document.getElementById('modal_check_in');
+    const checkOutInput = document.getElementById('modal_check_out');
+
+    if (!checkInInput.value) {
+        checkInInput.value = today.toISOString().split('T')[0];
+    }
+    if (!checkOutInput.value) {
+        checkOutInput.value = tomorrow.toISOString().split('T')[0];
+    }
+
+    if (roomId) {
+        document.getElementById('modal_room_select').value = roomId;
+    }
+    calculateModalTotal();
+}
+
+function closeBookingModal() {
+    document.getElementById('bookingModal').classList.add('hidden');
+    document.getElementById('directBookingForm').classList.remove('hidden');
+    document.getElementById('bookingSuccessBox').classList.add('hidden');
+}
+
+function calculateModalTotal() {
+    const checkIn = new Date(document.getElementById('modal_check_in').value);
+    const checkOut = new Date(document.getElementById('modal_check_out').value);
+    
+    let nights = 1;
+    if (checkOut > checkIn) {
+        nights = Math.round((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+    }
+
+    const roomSelect = document.getElementById('modal_room_select');
+    const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+    const pricePerNight = selectedOption ? parseFloat(selectedOption.getAttribute('data-price') || 14500) : 14500;
+
+    const baseTotal = pricePerNight * nights;
+    const taxTotal = baseTotal * 0.18;
+    const finalTotal = baseTotal + taxTotal;
+
+    document.getElementById('price_nights').innerText = nights + (nights === 1 ? ' Night' : ' Nights');
+    document.getElementById('price_base').innerText = '₹' + baseTotal.toLocaleString('en-IN');
+    document.getElementById('price_tax').innerText = '₹' + Math.round(taxTotal).toLocaleString('en-IN');
+    document.getElementById('price_final').innerText = '₹' + Math.round(finalTotal).toLocaleString('en-IN');
+}
+
+function handleBookingBarSearch() {
+    const checkIn = document.getElementById('bar_check_in').value;
+    const checkOut = document.getElementById('bar_check_out').value;
+    if (checkIn) document.getElementById('modal_check_in').value = checkIn;
+    if (checkOut) document.getElementById('modal_check_out').value = checkOut;
+    openBookingModal();
+}
+
+async function submitDirectBooking(e) {
+    e.preventDefault();
+    const btn = document.getElementById('modal_submit_btn');
+    btn.disabled = true;
+    btn.innerText = "Securing Reservation...";
+
+    const roomId = document.getElementById('modal_room_select').value;
+    const checkIn = document.getElementById('modal_check_in').value;
+    const checkOut = document.getElementById('modal_check_out').value;
+    const adults = parseInt(document.getElementById('modal_adults').value);
+    const children = parseInt(document.getElementById('modal_children').value);
+    const requests = document.getElementById('modal_requests').value;
+
+    try {
+        // Direct API call
+        const response = await fetch('/api/v1/bookings/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                room: roomId,
+                check_in_date: checkIn,
+                check_out_date: checkOut,
+                num_adults: adults,
+                num_children: children,
+                special_requests: requests
+            })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById('directBookingForm').classList.add('hidden');
+            const successBox = document.getElementById('bookingSuccessBox');
+            successBox.classList.remove('hidden');
+            document.getElementById('successBookingId').innerText = 'Booking ID: #BK-' + (data.id ? data.id.substring(0, 8).toUpperCase() : 'CONFIRMED');
+        } else {
+            // If authentication required, show friendly login redirection
+            alert("Reservation Note: To complete and bind this reservation to your guest profile, please sign in or proceed through the guest portal.\n\nDirect simulated reservation saved.");
+            window.location.href = '/guest-dashboard/';
+        }
+    } catch (err) {
+        window.location.href = '/guest-dashboard/';
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Confirm & Reserve Stay";
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Elara Grand Hotel & Resort | Luxury Redefined{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS (CDN for Development) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'elara-orange': '#D47234',
+                        'elara-burnt': '#A44D1E',
+                        'elara-gold': '#C5A880',
+                        'elara-champagne': '#E8DAC8',
+                        'elara-black': '#111111',
+                        'elara-charcoal': '#1C1C1C',
+                        'elara-ivory': '#FAFAFA',
+                    },
+                    fontFamily: {
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['Lato', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Premium CSS */
+        body {
+            background-color: #FAFAFA;
+            color: #111111;
+        }
+
+        /* Glassmorphism */
+        .glass-dark {
+            background: rgba(17, 17, 17, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(197, 168, 128, 0.2);
+        }
+        
+        .glass-light {
+            background: rgba(250, 250, 250, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(197, 168, 128, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Nav Transitions */
+        #main-nav {
+            transition: all 0.4s ease;
+        }
+
+        /* Button Animations */
+        .btn-gold {
+            background: linear-gradient(135deg, #C5A880 0%, #A3845E 100%);
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(197, 168, 128, 0.3);
+        }
+
+        .btn-orange {
+            background: linear-gradient(135deg, #D47234 0%, #A44D1E 100%);
+            color: white;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-orange:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 114, 52, 0.3);
+        }
+
+        .btn-outline-gold {
+            border: 1px solid #C5A880;
+            color: #C5A880;
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-gold:hover {
+            background: #C5A880;
+            color: white;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -4px;
+            left: 0;
+            background-color: #C5A880;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hide scrollbar for horizontal scroll sections */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Image hover zooms */
+        .img-zoom-container {
+            overflow: hidden;
+        }
+        .img-zoom {
+            transition: transform 0.8s ease;
+        }
+        .group:hover .img-zoom {
+            transform: scale(1.05);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="font-sans antialiased selection:bg-elara-gold selection:text-white">
+
+    <!-- Premium Navbar -->
+    <nav id="main-nav" class="fixed w-full z-50 transition-all duration-500 bg-transparent text-white py-4">
+        <div class="container mx-auto px-6 lg:px-12 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="/" class="flex flex-col items-center">
+                <span class="font-serif text-2xl tracking-widest text-elara-gold">ELARA</span>
+                <span class="text-[10px] tracking-[0.3em] uppercase opacity-80">Grand Resort</span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden lg:flex space-x-7 items-center text-sm font-medium tracking-wide">
+                <a href="/#rooms" class="nav-link hover:text-elara-gold transition-colors">Suites</a>
+                <a href="/#dining" class="nav-link hover:text-elara-gold transition-colors">Dining</a>
+                <a href="/#spa" class="nav-link hover:text-elara-gold transition-colors">Spa & Wellness</a>
+                <a href="/#events" class="nav-link hover:text-elara-gold transition-colors">Weddings & Galas</a>
+                <a href="/#about" class="nav-link hover:text-elara-gold transition-colors">The Legacy</a>
+            </div>
+
+            <!-- CTA & Dashboard Links -->
+            <div class="hidden lg:flex items-center space-x-4">
+                <a href="/guest-dashboard/" class="text-xs font-semibold text-slate-200 hover:text-elara-gold transition-colors px-3 py-1.5 rounded-lg border border-white/20 hover:border-elara-gold">
+                    <i class="fa-solid fa-user-shield mr-1"></i> Guest Portal
+                </a>
+                <a href="/admin-dashboard/" class="text-xs font-semibold text-amber-300 hover:text-white transition-colors px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20">
+                    <i class="fa-solid fa-gauge-high mr-1"></i> Command Center
+                </a>
+                <button onclick="if(window.openBookingModal){openBookingModal();}else{window.location.href='/#booking-bar';}" class="btn-gold px-5 py-2 rounded-xl text-xs uppercase tracking-wider font-semibold shadow-md">
+                    Book Now
+                </button>
+            </div>
+
+            <!-- Mobile Hamburger -->
+            <button class="lg:hidden text-2xl focus:outline-none text-elara-gold">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="bg-elara-black text-white pt-20 pb-10 border-t border-elara-charcoal">
+        <div class="container mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <a href="/" class="flex flex-col items-start mb-6">
+                        <span class="font-serif text-3xl tracking-widest text-elara-gold">ELARA</span>
+                        <span class="text-xs tracking-[0.3em] uppercase text-gray-400">Grand Resort & Spa</span>
+                    </a>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Experience the pinnacle of luxury in Pune. Where elegant design meets exceptional service to create unforgettable moments.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-elara-gold hover:border-elara-gold transition-all"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-elara-gold hover:border-elara-gold transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-elara-gold hover:border-elara-gold transition-all"><i class="fa-brands fa-twitter"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-serif text-lg mb-6 text-elara-ivory">Explore</h4>
+                    <ul class="space-y-3 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-elara-gold transition-colors">Rooms & Suites</a></li>
+                        <li><a href="#" class="hover:text-elara-gold transition-colors">Restaurants & Bars</a></li>
+                        <li><a href="#" class="hover:text-elara-gold transition-colors">Spa & Wellness</a></li>
+                        <li><a href="#" class="hover:text-elara-gold transition-colors">Meetings & Events</a></li>
+                        <li><a href="#" class="hover:text-elara-gold transition-colors">Special Offers</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-serif text-lg mb-6 text-elara-ivory">Contact</h4>
+                    <ul class="space-y-4 text-sm text-gray-400">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-location-dot mt-1 text-elara-gold"></i>
+                            <span>123 Luxury Avenue,<br>Pune, Maharashtra 411001,<br>India</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-phone text-elara-gold"></i>
+                            <span>+91 20 1234 5678</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-regular fa-envelope text-elara-gold"></i>
+                            <span>reservations@elara.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-serif text-lg mb-6 text-elara-ivory">Newsletter</h4>
+                    <p class="text-sm text-gray-400 mb-4">Subscribe to receive exclusive offers and updates.</p>
+                    <form class="flex">
+                        <input type="email" placeholder="Your Email" class="bg-elara-charcoal text-white px-4 py-2 w-full focus:outline-none focus:ring-1 focus:ring-elara-gold border border-gray-800 border-r-0">
+                        <button type="button" class="bg-elara-gold text-white px-4 py-2 hover:bg-elara-orange transition-colors"><i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="border-t border-elara-charcoal pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2026 Elara Grand Resort. All Rights Reserved.</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-gray-300">Privacy Policy</a>
+                    <a href="#" class="hover:text-gray-300">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script>
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('main-nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('glass-dark');
+                nav.classList.remove('bg-transparent', 'py-4');
+                nav.classList.add('py-2');
+            } else {
+                nav.classList.remove('glass-dark', 'py-2');
+                nav.classList.add('bg-transparent', 'py-4');
+            }
+        });
+
+        // Scroll Reveal Animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Trigger once on load
+        setTimeout(reveal, 100);
+    </script>
+    <!-- AI Luxury Guest Concierge Floating Widget -->
+    <div id="ai-concierge-container" class="fixed bottom-6 right-6 z-50 font-sans">
+        <!-- Floating Launcher Button -->
+        <button id="ai-concierge-toggle" onclick="toggleConciergeChat()" class="flex items-center gap-3 px-5 py-3.5 rounded-full bg-gradient-to-r from-elara-orange to-elara-gold text-white font-medium shadow-2xl hover:shadow-elara-gold/30 hover:scale-105 transition-all duration-300 border border-amber-200/40">
+            <span class="relative flex h-3 w-3">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+            </span>
+            <i class="fa-solid fa-bell-concierge text-lg"></i>
+            <span class="text-sm font-semibold tracking-wide">Elara AI Concierge</span>
+        </button>
+
+        <!-- Chat Modal / Window -->
+        <div id="ai-concierge-window" class="hidden flex-col w-96 max-w-[92vw] h-[520px] bg-slate-950 text-white rounded-3xl shadow-2xl border border-elara-gold/40 overflow-hidden mt-3 transition-all">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-900 to-amber-950/40 p-4 border-b border-elara-gold/20 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-elara-gold/20 border border-elara-gold/40 flex items-center justify-center text-elara-gold">
+                        <i class="fa-solid fa-hotel"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-serif text-sm font-bold text-white tracking-wide">Elara Grand Concierge</h4>
+                        <p class="text-[10px] text-emerald-400 flex items-center gap-1 font-mono">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Grounded Resort Intelligence
+                        </p>
+                    </div>
+                </div>
+                <button onclick="toggleConciergeChat()" class="text-slate-400 hover:text-white text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Messages Stream -->
+            <div id="concierge-messages" class="flex-1 p-4 overflow-y-auto space-y-3 text-xs leading-relaxed">
+                <!-- Welcome Bot Message -->
+                <div class="flex items-start gap-2.5">
+                    <div class="w-7 h-7 rounded-full bg-elara-gold/20 flex-shrink-0 flex items-center justify-center text-elara-gold text-[11px]">
+                        <i class="fa-solid fa-bell-concierge"></i>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-slate-200">
+                        Namaste and welcome to <b>Elara Grand Hotel & Resort</b>. I am your verified AI Resort Host. How may I assist your stay today?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Suggestion Chips -->
+            <div id="concierge-chips" class="px-4 py-2 bg-slate-900/60 border-t border-slate-800/80 flex gap-1.5 overflow-x-auto text-[11px] whitespace-nowrap">
+                <button onclick="sendQuickQuery('What are your check-in and check-out timings?')" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition-colors">Check-in times</button>
+                <button onclick="sendQuickQuery('What dining restaurants are open tonight?')" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition-colors">Fine Dining</button>
+                <button onclick="sendQuickQuery('Can I book an airport limousine transfer?')" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition-colors">Airport Car</button>
+                <button onclick="sendQuickQuery('What Ayurvedic spa treatments do you offer?')" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 transition-colors">Ayurveda Spa</button>
+            </div>
+
+            <!-- Chat Input Form -->
+            <form id="concierge-form" onsubmit="handleConciergeSubmit(event)" class="p-3 bg-slate-900 border-t border-slate-800 flex items-center gap-2">
+                <input id="concierge-input" type="text" placeholder="Ask about suites, dining, spa, checkout..." class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-elara-gold">
+                <button type="submit" class="w-9 h-9 rounded-xl bg-gradient-to-r from-elara-orange to-elara-gold text-white flex items-center justify-center hover:opacity-90 transition-opacity">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleConciergeChat() {
+            const w = document.getElementById('ai-concierge-window');
+            w.classList.toggle('hidden');
+            w.classList.toggle('flex');
+            if (!w.classList.contains('hidden')) {
+                document.getElementById('concierge-input').focus();
+            }
+        }
+
+        function sendQuickQuery(text) {
+            document.getElementById('concierge-input').value = text;
+            handleConciergeSubmit(new Event('submit'));
+        }
+
+        async function handleConciergeSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('concierge-input');
+            const query = input.value.trim();
+            if (!query) return;
+
+            const msgContainer = document.getElementById('concierge-messages');
+
+            // Append user bubble
+            const userBubble = document.createElement('div');
+            userBubble.className = 'flex justify-end';
+            userBubble.innerHTML = `<div class="bg-gradient-to-r from-elara-orange to-amber-700 text-white p-3 rounded-2xl rounded-tr-none max-w-[85%]">${query}</div>`;
+            msgContainer.appendChild(userBubble);
+            input.value = '';
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+
+            // Typing indicator
+            const loadingBubble = document.createElement('div');
+            loadingBubble.id = 'ai-loading';
+            loadingBubble.className = 'flex items-start gap-2.5';
+            loadingBubble.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-elara-gold/20 flex-shrink-0 flex items-center justify-center text-elara-gold text-[11px]"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl rounded-tl-none text-slate-400 italic text-[11px]">Consulting resort knowledgebase...</div>
+            `;
+            msgContainer.appendChild(loadingBubble);
+            msgContainer.scrollTop = msgContainer.scrollHeight;
+
+            try {
+                const res = await fetch('/api/v1/concierge/ai-chat/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: query })
+                });
+                const data = await res.json();
+                const loader = document.getElementById('ai-loading');
+                if (loader) loader.remove();
+
+                const botBubble = document.createElement('div');
+                botBubble.className = 'flex items-start gap-2.5';
+                const formatted = (data.response || 'I am happy to assist you at our Front Desk.')
+                    .replace(/\n/g, '<br>')
+                    .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+                botBubble.innerHTML = `
+                    <div class="w-7 h-7 rounded-full bg-elara-gold/20 flex-shrink-0 flex items-center justify-center text-elara-gold text-[11px]"><i class="fa-solid fa-bell-concierge"></i></div>
+                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl rounded-tl-none max-w-[85%] text-slate-200">
+                        ${formatted}
+                    </div>
+                `;
+                msgContainer.appendChild(botBubble);
+                msgContainer.scrollTop = msgContainer.scrollHeight;
+            } catch (err) {
+                const loader = document.getElementById('ai-loading');
+                if (loader) loader.remove();
+                const errBubble = document.createElement('div');
+                errBubble.className = 'flex items-start gap-2.5';
+                errBubble.innerHTML = `
+                    <div class="w-7 h-7 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center text-[11px]"><i class="fa-solid fa-circle-exclamation"></i></div>
+                    <div class="bg-slate-900 border border-red-500/30 p-3 rounded-2xl rounded-tl-none text-red-300 text-[11px]">
+                        The concierge service is momentarily experiencing high demand. Please dial +91 20 6725 3300 for direct assistance.
+                    </div>
+                `;
+                msgContainer.appendChild(errBubble);
+            }
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+
+{% block title %}My Sanctuary Dashboard | Elara Grand Resort{% endblock %}
+
+{% block extra_css %}
+<style>
+    body { background-color: #F8F9FA; }
+    #main-nav { background-color: #0E1117; padding-top: 1rem; padding-bottom: 1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pt-32 pb-24 min-h-screen">
+    <div class="container mx-auto px-6 lg:px-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            <!-- Sidebar -->
+            <div class="lg:w-1/4">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 overflow-hidden relative">
+                    <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-elara-orange to-elara-gold"></div>
+                    <div class="flex items-center gap-4 mb-8 mt-2">
+                        <div class="w-16 h-16 rounded-full bg-slate-900 text-elara-gold flex items-center justify-center text-xl font-serif border border-elara-gold/30">
+                            {{ guest_user.first_name|first|default:"A" }}{{ guest_user.last_name|first|default:"S" }}
+                        </div>
+                        <div>
+                            <h2 class="font-serif text-xl text-slate-800">{{ guest_user.get_full_name|default:"Arjun Sharma" }}</h2>
+                            <p class="text-xs uppercase tracking-widest font-semibold text-elara-gold">{{ loyalty.tier|default:"PLATINUM" }} VIP Member</p>
+                        </div>
+                    </div>
+                    
+                    <nav class="space-y-1.5 text-sm">
+                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-500/10 text-slate-900 font-medium border-l-4 border-elara-gold">
+                            <i class="fa-solid fa-layer-group w-5 text-elara-gold"></i> Overview
+                        </a>
+                        <a href="#reservations" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                            <i class="fa-solid fa-calendar-check w-5 text-slate-400"></i> My Reservations
+                        </a>
+                        <a href="#smart-services" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                            <i class="fa-solid fa-bell-concierge w-5 text-slate-400"></i> Smart Concierge
+                        </a>
+                        <a href="#complaints-section" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                            <i class="fa-solid fa-headset w-5 text-slate-400"></i> Service Recovery & Help
+                        </a>
+                        <a href="/admin-dashboard/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors">
+                            <i class="fa-solid fa-gauge-high w-5 text-slate-400"></i> Hotel Command Center
+                        </a>
+                        <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors mt-4">
+                            <i class="fa-solid fa-right-from-bracket w-5"></i> Return to Main Sanctuary
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:w-3/4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                    <div>
+                        <h1 class="font-serif text-3xl text-slate-900">Welcome, {{ guest_user.first_name|default:"Arjun" }}</h1>
+                        <p class="text-slate-500 text-sm mt-1">Your luxury retreat and personalized concierge services.</p>
+                    </div>
+                    <a href="/#booking-bar" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-elara-orange to-elara-gold text-white font-medium text-xs uppercase tracking-wider shadow-md hover:opacity-95 transition-opacity">
+                        + Reserve New Suite
+                    </a>
+                </div>
+                
+                <!-- Loyalty & Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-slate-900 rounded-2xl p-6 text-white relative overflow-hidden shadow-md">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/5 rounded-full"></div>
+                        <p class="text-xs uppercase tracking-widest text-slate-400 mb-2">Elara Club Points</p>
+                        <p class="text-3xl font-serif text-elara-gold mb-1">{{ loyalty.points_balance|default:"12,450" }}</p>
+                        <p class="text-xs text-slate-400">Complimentary upgrade eligibility: <b class="text-emerald-400">Active</b></p>
+                    </div>
+                    <div class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-6">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 mb-2">Member Tier</p>
+                        <p class="text-3xl font-serif text-amber-600 mb-1">{{ loyalty.tier|default:"PLATINUM" }}</p>
+                        <p class="text-xs text-slate-500">Privileges: <b class="text-slate-800">Complimentary Chauffeur & Spa</b></p>
+                    </div>
+                    <div class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-6 flex flex-col justify-center">
+                        <p class="text-xs uppercase tracking-widest text-slate-500 mb-2">Concierge Hotline</p>
+                        <p class="text-xl font-serif text-slate-900 mb-1">+91 20 6725 3300</p>
+                        <p class="text-xs text-emerald-600 font-medium"><i class="fa-solid fa-circle-check"></i> 24/7 Butler on duty</p>
+                    </div>
+                </div>
+
+                <!-- Upcoming Stay & Digital Pre-Arrival -->
+                <div id="reservations">
+                    <h3 class="font-serif text-xl text-slate-900 mb-4 flex items-center justify-between">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-hotel text-elara-gold"></i> Your Upcoming Stay</span>
+                        {% if active_booking and pre_arrival and pre_arrival.is_verified %}
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold"><i class="fa-solid fa-id-card mr-1"></i> ID Verified</span>
+                        {% endif %}
+                    </h3>
+                    
+                    {% if active_booking %}
+                    <div class="bg-white border border-slate-200/80 shadow-sm rounded-2xl overflow-hidden flex flex-col md:flex-row mb-8">
+                        <div class="md:w-1/3 h-56 md:h-auto relative">
+                            <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-elara-gold px-3 py-1 rounded-full text-xs font-semibold tracking-wider">
+                                Suite {{ active_booking.room.room_number }}
+                            </span>
+                        </div>
+                        <div class="p-6 md:w-2/3 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span class="bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">
+                                            {{ active_booking.get_status_display }}
+                                        </span>
+                                        <h4 class="font-serif text-2xl text-slate-900">{{ active_booking.room.room_type.name }}</h4>
+                                    </div>
+                                    <span class="text-xs text-slate-500 font-mono">ID: #BK-{{ active_booking.id|stringformat:"s"|slice:":8"|upper }}</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4 mt-4 mb-4 text-sm bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <div>
+                                        <p class="text-slate-500 text-xs uppercase tracking-wider mb-1">Check-in (2:00 PM)</p>
+                                        <p class="font-medium text-slate-900">{{ active_booking.check_in_date|date:"l, M d, Y" }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-slate-500 text-xs uppercase tracking-wider mb-1">Check-out (11:00 AM)</p>
+                                        <p class="font-medium text-slate-900">{{ active_booking.check_out_date|date:"l, M d, Y" }}</p>
+                                    </div>
+                                </div>
+                                {% if active_booking.special_requests %}
+                                <p class="text-xs text-slate-600 mb-2">
+                                    <b class="text-slate-800">Special Requests:</b> {{ active_booking.special_requests }}
+                                </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-100">
+                                <span class="text-sm font-semibold text-slate-900">Total Paid: ₹{{ active_booking.final_amount }}</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <!-- Digital Pre-Arrival Button -->
+                                    {% if not pre_arrival %}
+                                    <button onclick="openPreArrivalModal('{{ active_booking.id }}')" class="px-3.5 py-2 rounded-lg bg-elara-orange text-white hover:bg-elara-burnt text-xs font-semibold tracking-wider uppercase transition-colors">
+                                        <i class="fa-solid fa-id-card mr-1"></i> Digital Pre-Arrival
+                                    </button>
+                                    {% endif %}
+
+                                    <!-- Express Checkout Button -->
+                                    {% if active_booking.status == 'CHECKED_IN' %}
+                                    <button onclick="requestExpressCheckout('{{ active_booking.id }}')" class="px-3.5 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-700 text-xs font-semibold tracking-wider uppercase transition-colors">
+                                        <i class="fa-solid fa-key mr-1"></i> Express Checkout
+                                    </button>
+                                    {% endif %}
+
+                                    <button onclick="alert('Our Butler Concierge has been alerted to your reservation.')" class="px-3.5 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 text-xs font-medium tracking-wider uppercase transition-colors">
+                                        Contact Butler
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="bg-white border border-slate-200/80 rounded-2xl p-8 text-center text-slate-500 mb-8">
+                        <i class="fa-solid fa-bed text-3xl text-slate-400 mb-3 block"></i>
+                        <p class="font-medium">You currently do not have an active upcoming stay.</p>
+                        <a href="/#booking-bar" class="text-elara-orange font-semibold hover:underline text-sm mt-2 inline-block">Explore Accommodations & Reserve</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Quick Smart Concierge Services -->
+                <div id="smart-services" class="mb-8">
+                    <h3 class="font-serif text-xl text-slate-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles text-elara-gold"></i> One-Touch Smart Concierge
+                    </h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div onclick="triggerService('Fine Dining Room Service', 'Gourmet In-Room Dining dispatched to your suite.')" class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer hover:border-elara-gold hover:shadow-md transition-all group">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-elara-gold text-xl mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-utensils"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-900 uppercase tracking-wider">Room Dining</span>
+                            <span class="text-[11px] text-slate-500 mt-1">24/7 Chef's Menu</span>
+                        </div>
+                        <div onclick="triggerService('Serenity Spa', 'Spa Butler will confirm your treatment slot within 10 minutes.')" class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer hover:border-elara-gold hover:shadow-md transition-all group">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-elara-gold text-xl mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-spa"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-900 uppercase tracking-wider">Spa Booking</span>
+                            <span class="text-[11px] text-slate-500 mt-1">Ayurveda & Massage</span>
+                        </div>
+                        <div onclick="triggerService('Housekeeping Request', 'Turnover and fresh linen service requested.')" class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer hover:border-elara-gold hover:shadow-md transition-all group">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-elara-gold text-xl mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-broom"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-900 uppercase tracking-wider">Housekeeping</span>
+                            <span class="text-[11px] text-slate-500 mt-1">Fresh Linens & Amenities</span>
+                        </div>
+                        <div onclick="triggerService('Airport Chauffeur', 'BMW 7-Series Chauffeur transfer dispatch initiated.')" class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-5 flex flex-col items-center justify-center text-center cursor-pointer hover:border-elara-gold hover:shadow-md transition-all group">
+                            <div class="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-elara-gold text-xl mb-3 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-car-side"></i>
+                            </div>
+                            <span class="text-xs font-semibold text-slate-900 uppercase tracking-wider">Airport Transfer</span>
+                            <span class="text-[11px] text-slate-500 mt-1">Luxury Fleet</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Complaints & Service Recovery Tracking -->
+                <div id="complaints-section" class="bg-white border border-slate-200/80 shadow-sm rounded-2xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-serif text-xl text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-headset text-elara-gold"></i> Service Recovery & Assistance
+                        </h3>
+                        <button onclick="openComplaintModal()" class="px-4 py-2 bg-slate-900 text-white hover:bg-slate-800 rounded-xl text-xs font-semibold uppercase tracking-wider">
+                            + Lodge Inquiry / Request
+                        </button>
+                    </div>
+
+                    {% if complaints %}
+                    <div class="space-y-3">
+                        {% for c in complaints %}
+                        <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                            <div>
+                                <span class="font-mono text-xs font-bold text-slate-700">{{ c.ticket_number }}</span>
+                                <span class="ml-2 text-xs px-2 py-0.5 rounded font-bold uppercase 
+                                    {% if c.status == 'RESOLVED' %}bg-emerald-100 text-emerald-800
+                                    {% elif c.status == 'IN_PROGRESS' %}bg-blue-100 text-blue-800
+                                    {% else %}bg-amber-100 text-amber-800{% endif %}">
+                                    {{ c.get_status_display }}
+                                </span>
+                                <h5 class="text-sm font-semibold text-slate-800 mt-1">{{ c.title }}</h5>
+                                <p class="text-xs text-slate-500">{{ c.description|truncatechars:80 }}</p>
+                            </div>
+                            <div class="text-right text-xs">
+                                <span class="text-slate-400">Target SLA:</span>
+                                <p class="font-mono text-slate-700">{{ c.sla_due_time|date:"H:i, M d" }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-xs text-slate-500 italic">No open assistance tickets. Everything is running seamlessly for your stay.</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Digital Pre-Arrival -->
+<div id="prearrival-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-elara-gold/40">
+        <div class="flex justify-between items-center mb-4">
+            <h4 class="font-serif text-xl text-slate-900">Digital Pre-Arrival Check-in</h4>
+            <button onclick="closePreArrivalModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <p class="text-xs text-slate-500 mb-4">Provide government ID details in advance for zero-contact, instantaneous room key release upon arrival.</p>
+        <form onsubmit="submitPreArrival(event)" class="space-y-4">
+            <input type="hidden" id="pa-booking-id">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Document Type</label>
+                <select id="pa-doc-type" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange">
+                    <option value="PASSPORT">Passport (International)</option>
+                    <option value="AADHAAR">Aadhaar Card (India)</option>
+                    <option value="DRIVING_LICENSE">Driving License</option>
+                    <option value="VOTER_ID">Voter ID</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Document Number</label>
+                <input id="pa-doc-num" type="text" placeholder="e.g. Z1234567" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Estimated Arrival Time</label>
+                <input id="pa-arrival-time" type="time" value="14:00" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Special Preferences / Requests</label>
+                <textarea id="pa-requests" rows="2" placeholder="e.g. Extra down pillows, quiet wing" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange"></textarea>
+            </div>
+            <button type="submit" class="w-full py-3 bg-gradient-to-r from-elara-orange to-elara-gold text-white font-semibold rounded-xl text-sm shadow hover:opacity-95 transition-opacity">
+                Submit Pre-Arrival Verification
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Lodge Complaint / Request -->
+<div id="complaint-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-elara-gold/40">
+        <div class="flex justify-between items-center mb-4">
+            <h4 class="font-serif text-xl text-slate-900">Request Concierge Assistance</h4>
+            <button onclick="closeComplaintModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form onsubmit="submitComplaint(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Category</label>
+                <select id="cmp-category" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange">
+                    <option value="ROOM_CONDITION">Room Condition & Housekeeping</option>
+                    <option value="HVAC">AC & Climate Control</option>
+                    <option value="PLUMBING">Plumbing & Hot Water</option>
+                    <option value="FOOD_BEVERAGE">Dining & Food Quality</option>
+                    <option value="SPA_SERVICE">Spa Experience</option>
+                    <option value="OTHER">Other Inquiry</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Subject</label>
+                <input id="cmp-title" type="text" placeholder="Brief summary of request" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-700 mb-1">Details</label>
+                <textarea id="cmp-desc" rows="3" placeholder="Please describe how our team can resolve this for you..." required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-elara-orange"></textarea>
+            </div>
+            <button type="submit" class="w-full py-3 bg-slate-900 text-white font-semibold rounded-xl text-sm shadow hover:bg-slate-800 transition-colors">
+                Transmit Ticket to Duty Manager
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+function triggerService(serviceName, message) {
+    alert("✓ " + serviceName + " Dispatched!\n\n" + message);
+}
+
+function openPreArrivalModal(bookingId) {
+    document.getElementById('pa-booking-id').value = bookingId;
+    document.getElementById('prearrival-modal').classList.remove('hidden');
+}
+
+function closePreArrivalModal() {
+    document.getElementById('prearrival-modal').classList.add('hidden');
+}
+
+async function submitPreArrival(e) {
+    e.preventDefault();
+    const bookingId = document.getElementById('pa-booking-id').value;
+    const docType = document.getElementById('pa-doc-type').value;
+    const docNum = document.getElementById('pa-doc-num').value;
+    const eta = document.getElementById('pa-arrival-time').value;
+    const reqs = document.getElementById('pa-requests').value;
+
+    try {
+        const res = await fetch('/api/v1/bookings/pre-arrival/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                booking_id: bookingId,
+                document_type: docType,
+                document_number: docNum,
+                estimated_arrival_time: eta,
+                special_preferences: reqs
+            })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert('✓ Digital Pre-Arrival Verification Submitted Successfully!\nYour room key will be prepared for immediate contactless handover.');
+            location.reload();
+        } else {
+            alert('Pre-Arrival notice: ' + (data.error || 'Submission failed.'));
+        }
+    } catch (err) {
+        alert('Network error submitting pre-arrival: ' + err.message);
+    }
+}
+
+async function requestExpressCheckout(bookingId) {
+    if (!confirm('Would you like to initiate Instant Express Checkout?\nYour folio will be finalized and housekeeping dispatched for room turnover.')) return;
+    try {
+        const res = await fetch(`/api/v1/bookings/${bookingId}/request-express-checkout/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        alert('✓ ' + (data.message || 'Express checkout request logged! Front desk is finalizing your folio.'));
+        location.reload();
+    } catch (err) {
+        alert('Error initiating checkout: ' + err.message);
+    }
+}
+
+function openComplaintModal() {
+    document.getElementById('complaint-modal').classList.remove('hidden');
+}
+
+function closeComplaintModal() {
+    document.getElementById('complaint-modal').classList.add('hidden');
+}
+
+async function submitComplaint(e) {
+    e.preventDefault();
+    const cat = document.getElementById('cmp-category').value;
+    const title = document.getElementById('cmp-title').value;
+    const desc = document.getElementById('cmp-desc').value;
+
+    try {
+        const res = await fetch('/api/v1/complaints/tickets/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                category: cat,
+                title: title,
+                description: desc,
+                priority: 'HIGH'
+            })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert(`✓ Request logged successfully!\nTicket Number: ${data.ticket_number}\nOur duty team has an active SLA target to address this.`);
+            location.reload();
+        } else {
+            alert('Error: ' + JSON.stringify(data));
+        }
+    } catch (err) {
+        alert('Submission error: ' + err.message);
+    }
+}
+</script>
+{% endblock %}

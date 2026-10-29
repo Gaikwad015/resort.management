@@ -1,0 +1,44 @@
+# ==============================================================================
+# ELARA GRAND HOTEL & RESORT — PRODUCTION DEPENDENCIES (requirements.txt)
+# Python 3.10+ / 3.11 / 3.12 / 3.14 Compatible
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. CORE WEB FRAMEWORK
+# ------------------------------------------------------------------------------
+Django>=4.2.0,<5.0
+asgiref>=3.7.0
+sqlparse>=0.5.0
+tzdata>=2024.1
+
+# ------------------------------------------------------------------------------
+# 2. REST API & AUTHENTICATION
+# ------------------------------------------------------------------------------
+djangorestframework>=3.14.0
+djangorestframework-simplejwt>=5.3.0
+PyJWT>=2.8.0
+
+# ------------------------------------------------------------------------------
+# 3. OWASP TOP 10: 2025 SECURITY & HARDENING
+# ------------------------------------------------------------------------------
+django-axes>=6.1.0        # A07:2025 Brute-force protection & account lockout
+django-csp>=3.7.0         # A02:2025 Content Security Policy (XSS mitigation)
+django-cors-headers>=4.3.0 # Cross-Origin Resource Sharing control
+
+# ------------------------------------------------------------------------------
+# 4. ENVIRONMENT & CONFIGURATION
+# ------------------------------------------------------------------------------
+python-dotenv>=1.0.0      # Zero-trust credential isolation (.env loader)
+packaging>=24.0           # Dependency auditing & SBOM generation
+
+# ------------------------------------------------------------------------------
+# 5. ASSET & MEDIA PROCESSING
+# ------------------------------------------------------------------------------
+Pillow>=10.0.0            # Room images, guest avatars, and verification docs
+
+# ------------------------------------------------------------------------------
+# 6. DATABASE DRIVERS
+# ------------------------------------------------------------------------------
+# Note: SQLite3 is bundled with Python and requires no external driver.
+# If connecting to MySQL / MariaDB in production, install mysqlclient:
+mysqlclient>=2.2.0

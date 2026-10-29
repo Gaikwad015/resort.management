@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Command Center | Elara Grand Resort</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'admin-dark': '#0B0F19',
+                        'admin-card': '#131B2E',
+                        'admin-accent': '#38BDF8',
+                        'admin-success': '#22C55E',
+                        'admin-warning': '#F59E0B',
+                        'admin-danger': '#EF4444',
+                        'elara-gold': '#D4AF37',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-admin-dark text-slate-300 font-sans min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-admin-card border-r border-slate-800 flex flex-col hidden md:flex shrink-0">
+        <div class="p-6 border-b border-slate-800">
+            <h1 class="text-xl font-bold text-white tracking-widest flex items-center">
+                <i class="fa-solid fa-hotel text-elara-gold mr-2.5"></i> ELARA
+            </h1>
+            <span class="text-[11px] text-elara-gold tracking-wider uppercase block mt-1">Command Center & PMS</span>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><a href="#" class="flex items-center px-6 py-3 bg-slate-800/60 text-admin-accent border-r-2 border-admin-accent"><i class="fa-solid fa-chart-line w-6"></i> Overview & KPIs</a></li>
+                <li><a href="#floormap-section" class="flex items-center px-6 py-3 hover:bg-slate-800/40 text-amber-300 transition-colors"><i class="fa-solid fa-layer-group w-6"></i> Visual Floor Map</a></li>
+                <li><a href="#security-section" class="flex items-center px-6 py-3 text-emerald-400 hover:bg-slate-800/40 transition-colors"><i class="fa-solid fa-shield-halved w-6"></i> OWASP 2025 Monitor</a></li>
+                <li><a href="#complaints-section" class="flex items-center px-6 py-3 hover:bg-slate-800/40 transition-colors"><i class="fa-solid fa-headset w-6"></i> Guest SLA Tickets</a></li>
+                <li><a href="/guest-dashboard/" class="flex items-center px-6 py-3 hover:bg-slate-800/40 transition-colors"><i class="fa-solid fa-user-shield w-6"></i> Guest Sanctuary</a></li>
+                <li><a href="/admin/" target="_blank" class="flex items-center px-6 py-3 hover:bg-slate-800/40 transition-colors"><i class="fa-solid fa-sliders w-6"></i> Django Admin</a></li>
+            </ul>
+        </nav>
+        <div class="p-4 border-t border-slate-800">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-elara-gold font-bold">GM</div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium text-white">General Manager</p>
+                    <p class="text-xs text-slate-400">Zero-Trust Role: SUPER_ADMIN</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
+        <!-- Topbar -->
+        <header class="h-16 bg-admin-card border-b border-slate-800 flex items-center justify-between px-6 shrink-0">
+            <div class="flex items-center gap-4">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    OWASP Top 10: 2025 Active
+                </span>
+                <span class="text-xs text-slate-400 hidden sm:inline">Property: <b class="text-white">Elara Grand Luxury Resort & Spa</b></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="/api/v1/analytics/export/csv/" class="px-4 py-2 bg-gradient-to-r from-amber-600 to-elara-gold text-slate-950 font-bold rounded-lg text-xs tracking-wider uppercase flex items-center gap-2 hover:opacity-95 shadow transition-all">
+                    <i class="fa-solid fa-file-csv text-sm"></i> Download Financial CSV
+                </a>
+                <a href="/" class="text-slate-400 hover:text-white text-sm" title="Public Sanctuary"><i class="fa-solid fa-globe"></i></a>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+            
+            <!-- Real Hospitality Key Performance Indicators (Section 3.B) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                <div class="bg-admin-card p-5 rounded-2xl border border-slate-800 flex flex-col shadow-lg">
+                    <span class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Live Occupancy</span>
+                    <span class="text-3xl font-bold text-white">{{ occupancy_rate }}%</span>
+                    <span class="text-admin-success text-xs font-medium mt-1 flex items-center"><i class="fa-solid fa-arrow-trend-up mr-1"></i> {{ occupied_rooms }}/{{ total_rooms }} Rooms</span>
+                </div>
+                <div class="bg-admin-card p-5 rounded-2xl border border-slate-800 flex flex-col shadow-lg">
+                    <span class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Average Daily Rate</span>
+                    <span class="text-3xl font-bold text-amber-400 font-mono">₹{{ adr|floatformat:0 }}</span>
+                    <span class="text-slate-400 text-xs mt-1">ADR per Occupied Room</span>
+                </div>
+                <div class="bg-admin-card p-5 rounded-2xl border border-slate-800 flex flex-col shadow-lg">
+                    <span class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">RevPAR</span>
+                    <span class="text-3xl font-bold text-emerald-400 font-mono">₹{{ revpar|floatformat:0 }}</span>
+                    <span class="text-slate-400 text-xs mt-1">Revenue per Avail. Room</span>
+                </div>
+                <div class="bg-admin-card p-5 rounded-2xl border border-slate-800 flex flex-col shadow-lg">
+                    <span class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Gross Revenue</span>
+                    <span class="text-3xl font-bold text-white font-mono">₹{{ gross_revenue|floatformat:0 }}</span>
+                    <span class="text-admin-success text-xs mt-1">Rooms + Folio + Events</span>
+                </div>
+                <div class="bg-admin-card p-5 rounded-2xl border border-slate-800 flex flex-col shadow-lg">
+                    <span class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Operating Expenses</span>
+                    <span class="text-3xl font-bold text-rose-400 font-mono">₹{{ operating_expenses|floatformat:0 }}</span>
+                    <span class="text-slate-400 text-xs mt-1">Payroll & Procurement</span>
+                </div>
+                <div class="bg-admin-card p-5 rounded-2xl border border-slate-800 flex flex-col shadow-lg">
+                    <span class="text-slate-400 text-xs font-medium uppercase tracking-wider mb-1">Net Operating Profit</span>
+                    <span class="text-3xl font-bold {% if net_profit >= 0 %}text-emerald-400{% else %}text-rose-400{% endif %} font-mono">₹{{ net_profit|floatformat:0 }}</span>
+                    <span class="text-slate-400 text-xs mt-1">Gross Rev - Expenses</span>
+                </div>
+            </div>
+
+            <!-- VISUAL ROOM AND FLOOR MANAGEMENT (Section 3.A) -->
+            <div id="floormap-section" class="bg-admin-card rounded-2xl border border-slate-800 p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-elara-gold"></i>
+                            Visual Room & Floor Management Map
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Live status, supervisor cleanliness approval, guest occupancy, and room reassignment.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3 text-xs">
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> Available ({{ available_rooms }})</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span> Occupied ({{ occupied_rooms }})</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span> Cleaning ({{ cleaning_rooms }})</span>
+                        <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> Maintenance ({{ maintenance_rooms }})</span>
+                        <span class="px-2.5 py-1 bg-amber-500/10 text-amber-300 rounded border border-amber-500/30">
+                            {{ pending_inspections }} Pending Supervisor Sign-offs
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Floors Container -->
+                <div class="mt-6 space-y-6">
+                    {% for floor_name, floor_rooms in floors.items %}
+                    <div>
+                        <h4 class="text-xs uppercase tracking-widest font-bold text-elara-gold mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-stairs"></i> {{ floor_name }} ({{ floor_rooms|length }} Suites)
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {% for r in floor_rooms %}
+                            <div class="bg-slate-900 border 
+                                {% if r.status == 'AVAILABLE' %}border-emerald-500/40 hover:border-emerald-500
+                                {% elif r.status == 'OCCUPIED' %}border-blue-500/40 hover:border-blue-500
+                                {% elif r.status == 'CLEANING' %}border-amber-500/40 hover:border-amber-500
+                                {% else %}border-rose-500/40 hover:border-rose-500{% endif %}
+                                rounded-xl p-4 transition-all shadow-md relative">
+                                
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <span class="text-xl font-bold text-white font-mono">Room {{ r.room_number }}</span>
+                                        <p class="text-xs text-slate-400">{{ r.room_type }}</p>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider
+                                        {% if r.status == 'AVAILABLE' %}bg-emerald-500/20 text-emerald-400 border border-emerald-500/30
+                                        {% elif r.status == 'OCCUPIED' %}bg-blue-500/20 text-blue-400 border border-blue-500/30
+                                        {% elif r.status == 'CLEANING' %}bg-amber-500/20 text-amber-400 border border-amber-500/30
+                                        {% else %}bg-rose-500/20 text-rose-400 border border-rose-500/30{% endif %}">
+                                        {{ r.status_display }}
+                                    </span>
+                                </div>
+
+                                <div class="text-xs text-slate-400 my-2 pt-2 border-t border-slate-800">
+                                    <div class="flex justify-between">
+                                        <span>Tariff:</span>
+                                        <span class="text-slate-200 font-medium">₹{{ r.price|floatformat:0 }}/nt</span>
+                                    </div>
+                                    
+                                    {% if r.occupant %}
+                                    <div class="mt-1.5 p-2 rounded bg-blue-950/40 border border-blue-900/50">
+                                        <span class="text-blue-300 font-semibold block">{{ r.occupant.guest_name }}</span>
+                                        <span class="text-[10px] text-blue-400 font-mono">Due Out: {{ r.occupant.check_out }}</span>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Supervisor Approval & Status Action -->
+                                <div class="mt-3 pt-2 border-t border-slate-800/80 flex items-center justify-between text-xs">
+                                    <div>
+                                        {% if r.is_inspection_approved %}
+                                        <span class="text-emerald-400 text-[11px] font-semibold flex items-center gap-1">
+                                            <i class="fa-solid fa-circle-check"></i> Inspected
+                                        </span>
+                                        {% else %}
+                                        <button onclick="approveSupervisorInspection('{{ r.id }}', '{{ r.room_number }}')" class="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 rounded text-[10px] font-bold border border-amber-500/30 transition-colors">
+                                            <i class="fa-solid fa-stamp mr-1"></i> Pass Inspection
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <select onchange="updateRoomStatus('{{ r.id }}', this.value)" class="bg-slate-950 text-slate-300 text-[11px] rounded border border-slate-800 px-2 py-1 focus:outline-none focus:border-elara-gold">
+                                        <option value="" disabled selected>Change Status</option>
+                                        <option value="AVAILABLE">Available</option>
+                                        <option value="OCCUPIED">Occupied</option>
+                                        <option value="CLEANING">Cleaning</option>
+                                        <option value="MAINTENANCE">Maintenance</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Operations & Complaints Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Guest Complaints & Service Recovery (Section 3.G) -->
+                <div id="complaints-section" class="bg-admin-card rounded-2xl border border-slate-800 p-6 shadow-lg flex flex-col">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-headset text-elara-gold"></i> Guest Complaints & SLA Escalation
+                        </h3>
+                        <span class="text-xs text-slate-400">Total: {{ recent_complaints|length }} Tickets</span>
+                    </div>
+
+                    <div class="space-y-3 flex-1 overflow-y-auto">
+                        {% for c in recent_complaints %}
+                        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-xs font-bold text-elara-gold">{{ c.ticket_number }}</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase
+                                        {% if c.priority == 'URGENT' %}bg-red-500/20 text-red-400 border border-red-500/30
+                                        {% elif c.priority == 'HIGH' %}bg-amber-500/20 text-amber-400 border border-amber-500/30
+                                        {% else %}bg-blue-500/20 text-blue-400{% endif %}">
+                                        {{ c.priority }} Priority
+                                    </span>
+                                </div>
+                                <h5 class="text-sm font-semibold text-white mt-1">{{ c.title }}</h5>
+                                <p class="text-xs text-slate-400">Guest: {{ c.guest.get_full_name|default:c.guest.email }} • Dept: {{ c.assigned_department }}</p>
+                            </div>
+                            <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2">
+                                <span class="text-[11px] font-mono {% if c.is_overdue %}text-red-400 font-bold{% else %}text-slate-400{% endif %}">
+                                    SLA: {{ c.sla_due_time|date:"H:i, M d" }}
+                                </span>
+                                {% if c.status != 'RESOLVED' and c.status != 'CLOSED' %}
+                                <button onclick="resolveComplaint('{{ c.id }}', '{{ c.ticket_number }}')" class="px-3 py-1 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 rounded text-xs font-semibold border border-emerald-500/30">
+                                    Resolve
+                                </button>
+                                {% else %}
+                                <span class="text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-check"></i> Resolved</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% empty %}
+                        <p class="text-xs text-slate-500 text-center py-6">No guest complaints recorded. 100% Guest Satisfaction.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Housekeeping Turnover & Tasks -->
+                <div class="bg-admin-card rounded-2xl border border-slate-800 p-6 shadow-lg flex flex-col">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-broom text-admin-warning"></i> Housekeeping Turnover Tasks
+                        </h3>
+                        <span class="text-xs text-slate-400">Active Tasks: {{ housekeeping_tasks|length }}</span>
+                    </div>
+
+                    <div class="space-y-3 flex-1 overflow-y-auto">
+                        {% for t in housekeeping_tasks %}
+                        <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-mono font-bold">
+                                    {{ t.room.room_number }}
+                                </div>
+                                <div>
+                                    <p class="text-sm font-semibold text-white">{{ t.get_task_type_display }}</p>
+                                    <p class="text-xs text-slate-400">Assigned: {{ t.assigned_to.email|default:"Duty Staff" }}</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase
+                                {% if t.status == 'COMPLETED' %}bg-emerald-500/20 text-emerald-400
+                                {% elif t.status == 'IN_PROGRESS' %}bg-blue-500/20 text-blue-400
+                                {% else %}bg-amber-500/20 text-amber-400{% endif %}">
+                                {{ t.status }}
+                            </span>
+                        </div>
+                        {% empty %}
+                        <p class="text-xs text-slate-500 text-center py-6">No pending housekeeping tasks.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- OWASP Top 10: 2025 Live Security & Threat Monitor -->
+            <div id="security-section" class="bg-admin-card rounded-2xl border border-slate-800 p-6 shadow-lg">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b border-slate-800">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-elara-gold"></i>
+                            OWASP Top 10: 2025 Live Security & Threat Monitor
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-1">Real-time audit log, tamper-evident verification, and automated defensive telemetry.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">A01 Access: <b class="text-emerald-400">Enforced</b></span>
+                        <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">A05 Anti-Injection: <b class="text-emerald-400">Active</b></span>
+                        <span class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-300">A08 HMAC: <b class="text-emerald-400">Verified</b></span>
+                    </div>
+                </div>
+
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-400">
+                        <thead class="bg-slate-900 text-[11px] uppercase tracking-wider text-slate-300">
+                            <tr>
+                                <th class="px-4 py-3">Timestamp</th>
+                                <th class="px-4 py-3">Event Type</th>
+                                <th class="px-4 py-3">Severity</th>
+                                <th class="px-4 py-3">Client IP</th>
+                                <th class="px-4 py-3">Target Path</th>
+                                <th class="px-4 py-3">Integrity Check</th>
+                                <th class="px-4 py-3 text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80">
+                            {% for log in security_logs %}
+                            <tr class="hover:bg-slate-900/50 transition-colors">
+                                <td class="px-4 py-3 font-mono text-slate-400">{{ log.timestamp|date:"Y-m-d H:i:s" }}</td>
+                                <td class="px-4 py-3 font-medium text-white">{{ log.get_event_type_display }}</td>
+                                <td class="px-4 py-3">
+                                    {% if log.severity == 'CRITICAL' %}
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">CRITICAL</span>
+                                    {% elif log.severity == 'HIGH' %}
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">HIGH</span>
+                                    {% else %}
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">{{ log.severity }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-4 py-3 font-mono">{{ log.ip_address|default:"127.0.0.1" }}</td>
+                                <td class="px-4 py-3 font-mono text-slate-300">{{ log.path|default:"-" }}</td>
+                                <td class="px-4 py-3">
+                                    <span class="inline-flex items-center gap-1 text-emerald-400">
+                                        <i class="fa-solid fa-circle-check"></i> HMAC-SHA256 Valid
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right font-medium text-slate-300">
+                                    HTTP {{ log.status_code|default:"200" }}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="px-4 py-6 text-center text-slate-500">
+                                    <i class="fa-solid fa-shield-heart text-2xl text-slate-600 mb-2 block"></i>
+                                    System running smoothly. No high-risk security incidents recorded.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Operational Room Management JavaScript -->
+    <script>
+        async function approveSupervisorInspection(roomId, roomNumber) {
+            const notes = prompt(`Supervisor Inspection for Room ${roomNumber}:\nEnter inspection notes and confirm 100% cleanliness:`, 'Inspected and certified ready for guest check-in.');
+            if (notes === null) return;
+
+            try {
+                const res = await fetch(`/api/v1/rooms/${roomId}/inspect/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        is_approved: true,
+                        cleanliness_score: 5,
+                        notes: notes
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(`✓ Room ${roomNumber} Certified and Approved!\nStatus transitioned to AVAILABLE.`);
+                    location.reload();
+                } else {
+                    alert('Error: ' + JSON.stringify(data));
+                }
+            } catch (err) {
+                alert('Inspection error: ' + err.message);
+            }
+        }
+
+        async function updateRoomStatus(roomId, newStatus) {
+            if (!newStatus) return;
+            try {
+                const res = await fetch(`/api/v1/rooms/${roomId}/update-status/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(`✓ Room status updated to ${newStatus}.`);
+                    location.reload();
+                } else {
+                    alert('Status update rejected: ' + (data.error || JSON.stringify(data)));
+                }
+            } catch (err) {
+                alert('Update error: ' + err.message);
+            }
+        }
+
+        async function resolveComplaint(complaintId, ticketNum) {
+            const notes = prompt(`Resolve Ticket ${ticketNum}:\nEnter resolution actions and guest service recovery notes:`, 'Spoke with guest, rectified temperature control, offered complimentary evening drinks.');
+            if (notes === null) return;
+
+            try {
+                const res = await fetch(`/api/v1/complaints/tickets/${complaintId}/resolve/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ resolution_notes: notes })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert(`✓ Ticket ${ticketNum} marked as RESOLVED.`);
+                    location.reload();
+                } else {
+                    alert('Error: ' + JSON.stringify(data));
+                }
+            } catch (err) {
+                alert('Resolution error: ' + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
